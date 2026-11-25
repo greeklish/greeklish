@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+root="$(git rev-parse --show-toplevel)"
+python3 "$root/scripts/check-release.py" --staged
+exec "$root/scripts/scan-secrets.sh" staged

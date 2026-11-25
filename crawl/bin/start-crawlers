@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+set -u
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+CRAWL_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+CLEAN_BROWSER_DATA=false
+BACKEND_TARGET_MODE="${BACKEND_TARGET_MODE:-local}"
+
+for arg in "$@"; do
+  case "$arg" in
+    --clean-browser-data)
+      CLEAN_BROWSER_DATA=true
+      ;;
+    local|remote|both)
+      BACKEND_TARGET_MODE="$arg"
+      ;;
+    --backend=local|--backend=remote|--backend=both)
+      BACKEND_TARGET_MODE="${arg#--backend=}"
+      ;;
+    --local)
+      BACKEND_TARGET_MODE="local"
+      ;;
+    --remote)
+      BACKEND_TARGET_MODE="remote"
+      ;;
+    --both)
+      BACKEND_TARGET_MODE="both"
+      ;;
+    -h|--help)
+      echo "Usage: $0 [local|remote|both] [--clean-browser-data]"
+      echo ""
+      echo "Aliases: --backend=local|remote|both, --local, --remote, --both"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $arg" >&2
+      echo "Usage: $0 [local|remote|both] [--clean-browser-data]" >&2
+      exit 1
+      ;;
+  esac
+done
+
+export BACKEND_TARGET_MODE
+
+RGREECE_CRAWLER_PID=
+X_TRENDS_CRAWLER_PID=
+INSOMNIA_CRAWLER_PID=
+MYPHONE_CRAWLER_PID=
+PHORUM_CRAWLER_PID=
+ADSLGR_CRAWLER_PID=
+LAGONIKA_CRAWLER_PID=
+UBLOCK_LITE_MANIFEST="$CRAWL_DIR/extensions/ddkjiahejlhfcafbddmgiahcphecmpfh/2025.921.2008_0/manifest.json"
+
+cleanup() {
+  trap - INT TERM EXIT
+
+  for pid in \
+    "$RGREECE_CRAWLER_PID" \
+    "$X_TRENDS_CRAWLER_PID" \
+    "$INSOMNIA_CRAWLER_PID" \
+    "$MYPHONE_CRAWLER_PID" \
+    "$PHORUM_CRAWLER_PID" \
+    "$ADSLGR_CRAWLER_PID" \
+    "$LAGONIKA_CRAWLER_PID"; do
+    if [ -n "$pid" ]; then
+      kill "$pid" 2>/dev/null
+    fi
+  done
+
+  for pid in \
+    "$RGREECE_CRAWLER_PID" \
+    "$X_TRENDS_CRAWLER_PID" \
+    "$INSOMNIA_CRAWLER_PID" \
+    "$MYPHONE_CRAWLER_PID" \
+    "$PHORUM_CRAWLER_PID" \
+    "$ADSLGR_CRAWLER_PID" \
+    "$LAGONIKA_CRAWLER_PID"; do
+    if [ -n "$pid" ]; then
+      wait "$pid" 2>/dev/null
+    fi
+  done
+}
+
+start_crawler() {
+  local label="$1"
+  local script="$2"
+  local pid_var="$3"
+
+  (cd "$CRAWL_DIR" && npm run "$script") &
+  printf -v "$pid_var" "%s" "$!"
+  echo "$label crawler started (PID ${!pid_var})"
+}
+
+require_file() {
+  local path="$1"
+  local message="$2"
+
+  if [ ! -e "$path" ]; then
+    echo "$message" >&2
+    exit 1
+  fi
+}
+
+trap cleanup INT TERM EXIT
+
+echo "Starting Greeklish crawlers..."
+echo "Crawler directory: $CRAWL_DIR"
+echo "Backend target mode: $BACKEND_TARGET_MODE"
+
+require_file "$CRAWL_DIR/.env" "Missing $CRAWL_DIR/.env. Copy .env.example and configure backend tokens first."
+require_file "$CRAWL_DIR/node_modules" "Missing $CRAWL_DIR/node_modules. Run npm install first."
+
+if [ "$CLEAN_BROWSER_DATA" = true ]; then
+  echo "Removing crawler-owned browser profiles..."
+  rm -rf \
+    "$CRAWL_DIR/browser-data/reddit-browser" \
+    "$CRAWL_DIR/browser-data/x-browser" \
+    "$CRAWL_DIR/browser-data/insomnia-browser" \
+    "$CRAWL_DIR/browser-data/myphone-browser" \
+    "$CRAWL_DIR/browser-data/phorum-browser" \
+    "$CRAWL_DIR/browser-data/adslgr-browser" \
+    "$CRAWL_DIR/browser-data/lagonika-browser"
+fi
+
+if [ ! -e "$UBLOCK_LITE_MANIFEST" ]; then
+  echo "uBlock Origin Lite extension not found; installing it now..."
+  (cd "$CRAWL_DIR" && npm run install:ublock-lite) || exit 1
+fi
+
+if command -v pgrep >/dev/null 2>&1 && pgrep -af "patchright|chrome|chromium" >/dev/null 2>&1; then
+  echo "Existing Chromium/Patchright processes were found before startup."
+  echo "If you see more than four crawler browser windows, close old test/manual browsers first."
+fi
+
+start_crawler "r/greece" "crawl:r-greece-rising" RGREECE_CRAWLER_PID
+start_crawler "x.com" "crawl:x-trends" X_TRENDS_CRAWLER_PID
+start_crawler "insomnia" "crawl:insomnia-topics" INSOMNIA_CRAWLER_PID
+start_crawler "myphone" "crawl:myphone-topics" MYPHONE_CRAWLER_PID
+start_crawler "phorum" "crawl:phorum-topics" PHORUM_CRAWLER_PID
+start_crawler "adslgr" "crawl:adslgr-topics" ADSLGR_CRAWLER_PID
+start_crawler "lagonika" "crawl:lagonika-offers" LAGONIKA_CRAWLER_PID
+
+echo ""
+echo "All crawlers running. Press Ctrl+C to stop them."
+
+wait

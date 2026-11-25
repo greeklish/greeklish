@@ -1,0 +1,31 @@
+{
+  "name": "crawl",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --import ./test-support/environment.js --test test/*.test.js",
+    "crawl:r-greece-rising": "node src/cli.js crawl r-greece-rising",
+    "crawl:x-trends": "node src/cli.js crawl x-trends",
+    "crawl:insomnia-topics": "node src/cli.js crawl insomnia-topics",
+    "crawl:myphone-topics": "node src/cli.js crawl myphone-topics",
+    "crawl:phorum-topics": "node src/cli.js crawl phorum-topics",
+    "crawl:adslgr-topics": "node src/cli.js crawl adslgr-topics",
+    "crawl:lagonika-offers": "node src/cli.js crawl lagonika-offers",
+    "crawl:list": "node src/cli.js list-targets",
+    "start:crawlers": "./bin/start-crawlers",
+    "install:ublock-lite": "node scripts/install-ublock-lite.mjs",
+    "proxies": "node src/cli.js proxies",
+    "test-browser": "node src/cli.js test-browser"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "patchright": "1.61.1"
+  },
+  "license": "AGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/greeklish/greeklish.git",
+    "directory": "crawl"
+  }
+}

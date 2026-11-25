@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+	<title id="title">Greeklish.gr — Ο παλμός των ελληνικών κοινοτήτων</title>
+	<desc id="description">Δημοφιλή θέματα, συζητήσεις και προσφορές, σε μία σελίδα.</desc>
+	<rect width="1200" height="630" fill="#f5fafb" />
+	<rect width="1200" height="12" fill="#0081a7" />
+	<circle cx="1100" cy="515" r="250" fill="#e5f3f5" />
+	<circle cx="1100" cy="515" r="175" fill="none" stroke="#c5e5ea" stroke-width="2" />
+	<circle cx="1100" cy="515" r="100" fill="none" stroke="#c5e5ea" stroke-width="2" />
+	<g font-family="Arial, sans-serif">
+		<text x="80" y="162" fill="#0081a7" font-size="80" font-weight="700" letter-spacing="-3">Greeklish.gr</text>
+		<text x="80" y="288" fill="#11161a" font-size="54" font-weight="700">Ο παλμός των</text>
+		<text x="80" y="356" fill="#11161a" font-size="54" font-weight="700">ελληνικών κοινοτήτων</text>
+		<text x="80" y="454" fill="#465b64" font-size="30">Δημοφιλή θέματα, συζητήσεις και προσφορές.</text>
+		<text x="80" y="499" fill="#465b64" font-size="30">Σε μία σελίδα.</text>
+	</g>
+	<path d="M80 561 H202" stroke="#0081a7" stroke-width="6" stroke-linecap="round" />
+</svg>

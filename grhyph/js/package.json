@@ -1,0 +1,22 @@
+{
+  "name": "grhyph-js",
+  "version": "1.0.0",
+  "description": "A JavaScript port of grhyph's plain hyphenation and quick synizesis logic.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node quickSynizesis.test.js"
+  },
+  "keywords": [
+    "hyphenation",
+    "greek"
+  ],
+  "author": "",
+  "license": "AGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/greeklish/greeklish.git",
+    "directory": "grhyph/js"
+  }
+}

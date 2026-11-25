@@ -1,0 +1,15 @@
+# Build outputs
+/target/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Editor/OS
+.DS_Store
+Thumbs.db
+/.idea/
+
+# Logs
+*.log

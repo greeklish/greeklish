@@ -1,0 +1,19 @@
+x-project:
+  name: greeklish-feed
+
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg17
+    restart: always
+    shm_size: 1gb
+    ports:
+      - "127.0.0.1:55432:5432"
+    environment:
+      POSTGRES_DB: greeklish_feed
+      POSTGRES_USER: timescaledb
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - greeklish_feed_timescaledb_data:/var/lib/postgresql/data
+
+volumes:
+  greeklish_feed_timescaledb_data:

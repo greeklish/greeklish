@@ -1,0 +1,5 @@
+[env]
+# ts-rs resolves `#[ts(export_to = "bindings/ws.ts")]` relative to its export root, which defaults
+# to `./bindings`. Without this, `cargo test` writes the generated bindings to
+# `bindings/bindings/ws.ts` and the committed `bindings/ws.ts` silently goes stale.
+TS_RS_EXPORT_DIR = "."

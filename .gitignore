@@ -1,0 +1,47 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+credentials*.json
+service-account*.json
+
+# Dependencies, build products, and caches
+node_modules/
+target/
+build/
+dist/
+.svelte-kit/
+coverage/
+.output/
+.vercel/
+.netlify/
+.wrangler/
+__pycache__/
+*.pyc
+
+# Sessions, crawled data, logs, and test output
+browser-data/
+runtime-data/
+extensions/
+test-results/
+*.log
+*.sql.gz
+*.dump
+*.sqlite
+*.sqlite3
+
+# Local tooling
+.idea/
+.vscode/
+.claude/
+.agents/
+.codex
+.codex/
+.DS_Store
+Thumbs.db
